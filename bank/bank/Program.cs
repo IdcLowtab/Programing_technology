@@ -25,7 +25,7 @@
                 Console.WriteLine(e.Message);
                 return;
             }
-
+            Console.WriteLine(account1.GetAccountHistory());
         }
     }
 }

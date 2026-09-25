@@ -1,4 +1,6 @@
-﻿namespace bank;
+﻿using System.Text;
+
+namespace bank;
 
 internal class BankAccount
 {
@@ -23,11 +25,11 @@ internal class BankAccount
         Owner = name; //можно писать this.owner = name; но не обязательно, так как имена совпадают
         MakeDeposit(initialBalance, DateTime.UtcNow, "Initial balance");
         Number = s_accountNumberSeed.ToString();
-        s_accountNumberSeed++;    
+        s_accountNumberSeed++;
     }
     public void MakeDeposit(decimal amount, DateTime date, string note)
     {
-        if(amount <= 0)
+        if (amount <= 0)
         {
             throw new ArgumentOutOfRangeException(nameof(amount), "Amount of deposit must be positive");
         }
@@ -36,7 +38,7 @@ internal class BankAccount
     }
     public void MakeWithdrawal(decimal amount, DateTime date, string note)
     {
-        if(amount <= 0)
+        if (amount <= 0)
         {
             throw new ArgumentOutOfRangeException(nameof(amount), "Amount of withdrawal must be positive");
         }
@@ -47,5 +49,19 @@ internal class BankAccount
 
         var withdrawal = new Transaction(-amount, date, note);
         _allTransactions.Add(withdrawal);
+    }
+    public string GetAccountHistory()
+    {
+        var report = new StringBuilder();
+        decimal balance = 0;
+        report.AppendLine("Date\t\tAmount\tBalance\tNote");
+        foreach (var item in _allTransactions)
+        {
+            balance += item.Amount;
+            report.AppendLine($"" +
+                $"{item.Date.ToShortDateString()}\t" +
+                $"{item.Amount}\t{balance}\t{item.Note}");
+        }
+        return report.ToString();
     }
 }
