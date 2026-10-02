@@ -26,6 +26,13 @@
                 return;
             }
             Console.WriteLine(account1.GetAccountHistory());
+            InterestEarningAccount interestEarning = new("Maxim", 1000m);
+            interestEarning.MakeDeposit(1000m, DateTime.UtcNow, ":)");
+            interestEarning.MakeWithdrawal(10m, DateTime.UtcNow, ":(");
+
+            Console.WriteLine(interestEarning);
+            Console.WriteLine(interestEarning.GetAccountHistory());
+
         }
     }
 }
