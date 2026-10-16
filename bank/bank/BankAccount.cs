@@ -10,8 +10,9 @@ public class BankAccount
 {
     private readonly decimal _minimumBalance;
     static private int s_accountNumberSeed = 1000000000;
-    public string Number { get; }
     public string Owner { get; private set; }
+    public Status Status { get; set; }
+    public string Number { get; }
     private List<Transaction> _allTransactions = new List<Transaction>();
     /// <summary>
     /// Возвращает текущий баланс счета,
@@ -46,9 +47,11 @@ public class BankAccount
     /// <param name="name">Имя владельца счета</param>
     /// <param name="initialBalance">Начальный баланс</param>
     /// <param name="minimumBalance">Минимальный баланс</param>
-    public BankAccount(string name, decimal initialBalance, decimal minimumBalance)
+    /// <param name="status">Статус счета</param>
+    public BankAccount(string name, decimal initialBalance, decimal minimumBalance, Status status = Status.Regular)
     {
         Owner = name;
+        status = status;    
         Number = s_accountNumberSeed.ToString();
         s_accountNumberSeed++;
 
@@ -130,7 +133,35 @@ public class BankAccount
     /// </summary>
     public virtual void PerformMonthAndTransactions()
     {
+        if (Status == Status.Regular)
+        {
+            MakeWithdrawal(50m, DateTime.UtcNow, "Monthly fee");
+        }
+        else if (Status == Status.Premium)
+        {
+            if (Balance > 10000m)
+            {
+                decimal interest = (Balance - 10000m) * 0.01m;
+                MakeDeposit(interest, DateTime.UtcNow, "Premium interest");
+            }
+        }
+        else if (Status == Status.VIP)
+        {
+            if (Balance > 10000m)
+            {
+                decimal interest = (Balance - 10000m) * 0.03m;
+                MakeDeposit(interest, DateTime.UtcNow, "VIP interest");
+            }
 
+            decimal totalWithdrawals = 0m;
+            foreach (var t in _allTransactions)
+            {
+                if (t.Amount < 0) totalWithdrawals += -t.Amount;
+            }
+
+            decimal cashback = totalWithdrawals * 0.05m;
+            if (cashback > 0m) MakeDeposit(cashback, DateTime.UtcNow, "VIP cashback");
+        }
     }
 
     // переопределяем метод базового класса - класса object 
