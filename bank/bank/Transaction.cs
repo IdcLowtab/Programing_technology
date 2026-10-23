@@ -1,9 +1,24 @@
-﻿namespace bank;
-//неизменяемый тип данных, который может содержать только свойства и методы, но не поля. Он используется для представления неизменяемых объектов, таких как транзакции в банковской системе.
+﻿namespace Bank;
+
+// record - Состояние объектов этого класса нельзя изменить
+
 /// <summary>
-/// Представляет транзакцию на банковском счете, включая сумму, дату и примечание.
+/// Запись об одной банковской операции.
 /// </summary>
-/// <param name="Amount">сумма транзакции</param>
-/// <param name="Date">дата транзакции</param>
-/// <param name="Note">примечание к транзакции</param>
+/// <param name="Amount">Сумма операции со знаком: положительная — пополнение, отрицательная — списание.</param>
+/// <param name="Date">Дата и время операции.</param>
+/// <param name="Note">Комментарий к операции.</param>
 public record Transaction(decimal Amount, DateTime Date, string Note);
+
+//internal record Transaction
+//{
+//    public decimal Amount { get; }
+//    public DateTime Date { get; }
+//    public string Note { get; }
+//    public Transaction(decimal Amount, DateTime Date, string Note)
+//    {
+//        this.Amount = Amount;
+//        this.Note = Note;
+//        this.Date = Date;
+//    }
+//}

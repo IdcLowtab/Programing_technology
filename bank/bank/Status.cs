@@ -1,7 +1,22 @@
-﻿namespace bank;
-public enum Status
+﻿namespace Bank;
+
+/// <summary>
+/// Статус клиента банка, от которого зависит обслуживание счёта.
+/// </summary>
+public enum ClientStatus
 {
-    Regular,
-    Premium,
-    VIP
+    /// <summary>
+    /// Обычный клиент: комиссия за обслуживание 50 рублей в месяц.
+    /// </summary>
+    Regular = 0,
+
+    /// <summary>
+    /// Премиум-клиент: без ежемесячной комиссии, но 1% с остатка свыше 10 000 рублей.
+    /// </summary>
+    Premium = 1,
+
+    /// <summary>
+    /// VIP-клиент: без ежемесячной комиссии, 3% с остатка свыше 10 000 рублей и кэшбэк 5% на все списания.
+    /// </summary>
+    VIP = 2
 }
