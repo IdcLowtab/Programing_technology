@@ -1,38 +1,33 @@
-﻿Console.OutputEncoding = System.Text.Encoding.UTF8;
+﻿using GuessNumberGame.Interfaces;
+using GuessNumberGame;
 
-Console.WriteLine("=== ИГРА: УГАДАЙ ЧИСЛО ===");
+Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-var random = new Random();
-int secretNumber = random.Next(1, 101);
-int attempts = 0;
+var console = new ConsoleService();
+var generator = new DefaultRandomGenerator();
 
-Console.WriteLine("Я загадал число от 1 до 100. Попробуй угадать!");
+// Создаем игру и подключаем подписчика на события
+var game = new GuessGame(generator, console);
+var watcher = new ConsoleGameWatcher(console);
+watcher.Attach(game);
 
-while (true)
+var levels = new List<IDifficulty>
 {
-    Console.Write($"Попытка #{attempts + 1}. Введи число: ");
-    string? input = Console.ReadLine();
+    new EasyLevel(),
+    new NormalLevel(),
+    new HardLevel(),
+    new CustomLevel(console)
+};
 
-    if (!int.TryParse(input, out int guess))
-    {
-        Console.WriteLine("Нужно ввести целое число!");
-        continue;
-    }
+console.Print("=== ИГРА: УГАДАЙ ЧИСЛО ===");
+console.Print("Выбери уровень сложности:");
 
-    attempts++;
-
-    if (guess == secretNumber)
-    {
-        Console.WriteLine($"Поздравляю! Ты угадал число {secretNumber} за {attempts} попыток!");
-        break;
-    }
-
-    if (guess < secretNumber)
-    {
-        Console.WriteLine("Загаданное число БОЛЬШЕ.");
-    }
-    else
-    {
-        Console.WriteLine("Загаданное число МЕНЬШЕ.");
-    }
+for (int i = 0; i < levels.Count; i++)
+{
+    console.Print($"{i + 1}. {levels[i].Title}");
 }
+
+int choice = console.ReadNumber("Твой выбор: ", 1, levels.Count) - 1;
+GameConfig config = levels[choice].CreateConfig();
+
+game.Start(config);

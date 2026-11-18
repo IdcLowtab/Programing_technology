@@ -1,6 +1,6 @@
 ﻿namespace GuessNumberGame.Interfaces;
 
-internal interface IOutput
+public interface IOutput
 {
     void Print(string text);
 }
